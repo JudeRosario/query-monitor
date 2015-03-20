@@ -1,15 +1,10 @@
+[![WordPress Plugin Version](https://img.shields.io/wordpress/plugin/v/query-monitor.svg?style=flat-square)](https://wordpress.org/plugins/query-monitor/)
+[![License](https://img.shields.io/badge/license-GPL_v2%2B-blue.svg?style=flat-square)](http://opensource.org/licenses/GPL-2.0)
+[![Documentation](https://img.shields.io/badge/docs-stable-blue.svg?style=flat-square)](https://docs.querymonitor.com/en/stable/)
+[![WordPress Tested](https://img.shields.io/wordpress/v/query-monitor.svg?style=flat-square)](https://wordpress.org/plugins/query-monitor/)
+[![Build Status](https://img.shields.io/travis/johnbillion/query-monitor.svg?style=flat-square)](https://travis-ci.org/johnbillion/query-monitor)
+
 # Query Monitor #
-
-**Contributors:** johnbillion  
-**Tags:** debug, debugging, development, developer, performance, profiler, profiling, queries, query monitor  
-**Requires at least:** 3.5  
-**Tested up to:** 4.1  
-**Stable tag:** 2.6.10  
-**License:** GPL v2 or later  
-
-View debugging and performance information on database queries, hooks, conditionals, HTTP requests, redirects and more.
-
-## Description ##
 
 Query Monitor is a debugging plugin for anyone developing with WordPress. It has some advanced features not available in other debugging plugins, including automatic AJAX debugging and the ability to narrow down things by plugin or theme.
 
@@ -27,6 +22,7 @@ Here's an example of Query Monitor's output. This is the panel showing aggregate
     * [Theme](#theme)
     * [PHP Errors](#php-errors)
     * [Request](#request)
+    * [Scripts & Styles](#scripts--styles)
     * [HTTP Requests](#http-requests)
     * [Redirects](#redirects)
     * [AJAX](#ajax)
@@ -59,7 +55,7 @@ Filtering queries by component or calling function makes it easy to see which pl
 
 ## Hooks ##
 
- * Shows all hooks fired on the current page, along with hooked actions and their priorities
+ * Shows all hooks fired on the current page, along with hooked actions, their priorities, and their components
  * Filter hooks by **part of their name**
  * Filter actions by **component** (WordPress core, Plugin X, Plugin Y, theme)
 
@@ -79,6 +75,12 @@ Filtering queries by component or calling function makes it easy to see which pl
  * Shows **matched rewrite rules** and associated query strings
  * Shows **query vars** for the current request, and highlights **custom query vars**
  * Shows the **queried object** details (collapsed by default)
+ * Shows details of the **current blog** (multisite only) and **current site** (multi-network only)
+
+## Scripts & Styles ##
+
+ * Shows all **enqueued scripts and styles** on the current page, along with their URL and version
+ * Shows their **dependencies and dependents**, and alerts you to any **broken dependencies**
 
 ## HTTP Requests ##
 
@@ -117,7 +119,7 @@ Hands up who can remember the correct names for the filters and actions for cust
  * Shows any **transients that were set**, along with their timeout, component, and call stack
  * Shows all **WordPress conditionals** on the current page, highlighted nicely
  * Shows an overview at the top, including page generation time and memory limit as absolute values and as % of their respective limits
- * Shows all *scripts and styles* which were enqueued on the current page, along with their path, dependencies, and version number
+ * Shows all *scripts and styles* which were enqueued on the current page, along with their URL, dependencies, dependents, and version number
 
 ## Authentication ##
 
@@ -135,7 +137,7 @@ However, it is likely that I will add some form of profiling functionality at so
 
 ## A Note on Query Monitor's Implementation ##
 
-In order to do a few clever things, Query Monitor loads earlier than you ever thought humanly possible (almost). It does this by symlinking a custom `db.php` in your `WP_CONTENT_DIR`. This file (when present) gets included before the database driver is loaded, meaning this portion of Query Monitor loads before WordPress even engages its brain.
+In order to do a few clever things, Query Monitor loads earlier than you ever thought humanly possible (almost). It does this by symlinking a custom `db.php` into your `WP_CONTENT_DIR`. This file gets included before the database driver is loaded, meaning this portion of Query Monitor loads before WordPress even engages its brain.
 
 In this file is Query Monitor's extension to the `wpdb` class which:
 
@@ -144,11 +146,11 @@ In this file is Query Monitor's extension to the `wpdb` class which:
  * Logs the query result, which allows us to display the affected rows or error message if applicable
  * Logs various PHP configurations before anything has loaded, which allows us to display a message if these get altered at runtime by a plugin or theme
 
-If your `WP_CONTENT_DIR` isn't writable and therefore the symlink for `db.php` can't be put in place, Query Monitor still functions, but this extended functionality won't be available. You can manually create the symlink to the plugin's `wp-content/db.php` if you have permission. ([Related GitHub issue](https://github.com/johnbillion/QueryMonitor/issues/5))
+If your `WP_CONTENT_DIR` isn't writable and therefore the symlink for `db.php` can't be put in place, Query Monitor still functions, but this extended functionality won't be available. You can [manually create the db.php symlink](https://github.com/johnbillion/query-monitor/wiki/db.php-Symlink) if you have permission.
 
 # Screenshots #
 
-### Admin Menu ###
+### Admin Toolbar Menu ###
 
 ![Admin Menu](https://raw.github.com/johnbillion/QueryMonitor/master/assets-wp-repo/screenshot-1.png)
 
